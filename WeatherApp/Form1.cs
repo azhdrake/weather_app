@@ -21,8 +21,10 @@ namespace WeatherApp
 
     private void btbGetWeather_Click(object sender, EventArgs e)
     {
+    // disables the button while the API call is happening.
       btbGetWeather.Enabled = false;
 
+    // Get's the city and state text and does a whole lotta verification on them.
       string city = txtCity.Text;
       string state = txtState.Text;
 
@@ -86,6 +88,7 @@ namespace WeatherApp
 
     private bool GetWeatherText(string city, string state, out string weatherText, out string errorMessage)
     {
+    // the api call.
       string baseUrl = "http://weather-csharp.herokuapp.com/";
       string weatherTextUrl = String.Format("{0}text?city={1}&state={2}", baseUrl, city, state);
       weatherText = null;
@@ -109,6 +112,7 @@ namespace WeatherApp
     }
     private bool LocationDataValid(string city, string state, out string errorMessage)
     {
+    // verification that city and state strings are not empty.
       errorMessage = null;
       if (String.IsNullOrWhiteSpace(city))
       {
@@ -124,6 +128,7 @@ namespace WeatherApp
     }
     private bool CheckForNumericCharacters(string testString)
     {
+    //verification that there are no numaric characters in the a strings.
       foreach (char c in testString)
       {
         if (Char.IsNumber(c))
@@ -136,6 +141,7 @@ namespace WeatherApp
 
     private bool VerifyStateName(string potentialState)
     {
+    // verification that the state name is a real state or state code. 
       Dictionary<string, string> states = GetAllStates();
       foreach (KeyValuePair<string, string> state in states)
       {
@@ -149,6 +155,7 @@ namespace WeatherApp
 
     private Dictionary<string, string> GetAllStates()
       {
+      // it's just a dictionary of all the state codes and names.
       Dictionary<string, string> states = new Dictionary<string, string>();
 
       states.Add("AL", "Alabama");
