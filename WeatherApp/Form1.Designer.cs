@@ -31,10 +31,10 @@
       this.pbWeatherImage = new System.Windows.Forms.PictureBox();
       this.lblWeatherText = new System.Windows.Forms.Label();
       this.txtCity = new System.Windows.Forms.TextBox();
-      this.txtState = new System.Windows.Forms.TextBox();
       this.btbGetWeather = new System.Windows.Forms.Button();
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
+      this.cmbStates = new System.Windows.Forms.ComboBox();
       ((System.ComponentModel.ISupportInitialize)(this.pbWeatherImage)).BeginInit();
       this.SuspendLayout();
       // 
@@ -60,14 +60,6 @@
       this.txtCity.Name = "txtCity";
       this.txtCity.Size = new System.Drawing.Size(189, 31);
       this.txtCity.TabIndex = 0;
-      // 
-      // txtState
-      // 
-      this.txtState.Location = new System.Drawing.Point(283, 65);
-      this.txtState.MaxLength = 13;
-      this.txtState.Name = "txtState";
-      this.txtState.Size = new System.Drawing.Size(189, 31);
-      this.txtState.TabIndex = 1;
       // 
       // btbGetWeather
       // 
@@ -97,15 +89,24 @@
       this.label2.TabIndex = 6;
       this.label2.Text = "State";
       // 
+      // cmbStates
+      // 
+      this.cmbStates.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cmbStates.FormattingEnabled = true;
+      this.cmbStates.Location = new System.Drawing.Point(283, 65);
+      this.cmbStates.Name = "cmbStates";
+      this.cmbStates.Size = new System.Drawing.Size(189, 33);
+      this.cmbStates.TabIndex = 100;
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 580);
+      this.Controls.Add(this.cmbStates);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.btbGetWeather);
-      this.Controls.Add(this.txtState);
       this.Controls.Add(this.txtCity);
       this.Controls.Add(this.lblWeatherText);
       this.Controls.Add(this.pbWeatherImage);
@@ -122,10 +123,10 @@
     private System.Windows.Forms.PictureBox pbWeatherImage;
     private System.Windows.Forms.Label lblWeatherText;
     private System.Windows.Forms.TextBox txtCity;
-    private System.Windows.Forms.TextBox txtState;
     private System.Windows.Forms.Button btbGetWeather;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.ComboBox cmbStates;
   }
 }
 

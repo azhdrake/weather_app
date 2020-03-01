@@ -16,49 +16,48 @@ namespace WeatherApp
   {
     public Form1()
     {
+      // 
       InitializeComponent();
+      cmbStates.Items.AddRange(states);
     }
+
+    string[] states = {"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado","Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii","Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine","Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri","Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York","North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania","Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah","Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
 
     private void btbGetWeather_Click(object sender, EventArgs e)
     {
       btbGetWeather.Enabled = false;
 
       string city = txtCity.Text;
-      string state = txtState.Text;
+      string state = cmbStates.Text;
 
       if (LocationDataValid(city, state, out string error))
       {
         if (VerifyLength(city, 3))
         {
-          if(VerifyLength(state, 2))
-          { 
-            if (VerifyStateName(state)) 
-            { 
-              if (CheckForNumericCharacters(city) && CheckForNumericCharacters(state))
+            if (CheckForNumericCharacters(city) && CheckForNumericCharacters(state))
+            {
+              if (GetWeatherText(city, state, out string weather, out string textErrorMessage))
               {
-                if (GetWeatherText(city, state, out string weather, out string textErrorMessage))
-                {
-                  lblWeatherText.Text = weather;
-                }
-                else
-                {
-                  MessageBox.Show(textErrorMessage, "Error");
-                }
+                lblWeatherText.Text = weather;
+                
               }
               else
               {
-                MessageBox.Show("Please don't include numbers city and state inputs", "Error");
+                MessageBox.Show(textErrorMessage, "Error");
               }
+              if (GetWeatherImage(city, state, out Image weatherImage, out string errorMessage))
+            {
+              pbWeatherImage.Image = weatherImage;
             }
             else
             {
-              MessageBox.Show("State not valid.", "Error");
+              MessageBox.Show(errorMessage, "Error");
             }
-          }
-          else
-          {
-            MessageBox.Show("State name needs to be at least 2 characters long", "Error");
-          }
+            }
+            else
+            {
+              MessageBox.Show("Please don't include numbers city and state inputs", "Error");
+            }
         }
         else
         {
@@ -80,6 +79,32 @@ namespace WeatherApp
       }
       else
       {
+        return false;
+      }
+    }
+
+    private bool GetWeatherImage(string city, string state, out Image weatherImage, out string errorMessage)
+    {
+      weatherImage = null;
+      errorMessage = null;
+
+      try
+      {
+        using (WebClient client = new WebClient())
+        {
+          string baseUrl = "http://weather-csharp.herokuapp.com/";
+          string weatherPhotoUrl = String.Format("{0}photo?city={1}&state={2}", baseUrl, city, state);
+          string tempFileDirectory = System.IO.Path.GetTempPath().ToString();
+          String weatherFilePath = System.IO.Path.Combine(tempFileDirectory, "weather_image.jpeg");
+          Debug.WriteLine(weatherFilePath);
+          client.DownloadFile(weatherPhotoUrl, weatherFilePath);
+          weatherImage = Image.FromFile(weatherFilePath);
+        }
+        return true;
+      } catch(Exception e)
+      {
+        Debug.WriteLine(e.StackTrace);
+        errorMessage = e.Message;
         return false;
       }
     }
@@ -132,78 +157,6 @@ namespace WeatherApp
         }
       }
       return true;
-    }
-
-    private bool VerifyStateName(string potentialState)
-    {
-      Dictionary<string, string> states = GetAllStates();
-      foreach (KeyValuePair<string, string> state in states)
-      {
-        if(potentialState.ToLower() == state.Key.ToLower() || potentialState.ToLower() == state.Value.ToLower())
-        {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    private Dictionary<string, string> GetAllStates()
-      {
-      Dictionary<string, string> states = new Dictionary<string, string>();
-
-      states.Add("AL", "Alabama");
-      states.Add("AK", "Alaska");
-      states.Add("AZ", "Arizona");
-      states.Add("AR", "Arkansas");
-      states.Add("CA", "California");
-      states.Add("CO", "Colorado");
-      states.Add("CT", "Connecticut");
-      states.Add("DE", "Delaware");
-      states.Add("DC", "District of Columbia");
-      states.Add("FL", "Florida");
-      states.Add("GA", "Georgia");
-      states.Add("HI", "Hawaii");
-      states.Add("ID", "Idaho");
-      states.Add("IL", "Illinois");
-      states.Add("IN", "Indiana");
-      states.Add("IA", "Iowa");
-      states.Add("KS", "Kansas");
-      states.Add("KY", "Kentucky");
-      states.Add("LA", "Louisiana");
-      states.Add("ME", "Maine");
-      states.Add("MD", "Maryland");
-      states.Add("MA", "Massachusetts");
-      states.Add("MI", "Michigan");
-      states.Add("MN", "Minnesota");
-      states.Add("MS", "Mississippi");
-      states.Add("MO", "Missouri");
-      states.Add("MT", "Montana");
-      states.Add("NE", "Nebraska");
-      states.Add("NV", "Nevada");
-      states.Add("NH", "New Hampshire");
-      states.Add("NJ", "New Jersey");
-      states.Add("NM", "New Mexico");
-      states.Add("NY", "New York");
-      states.Add("NC", "North Carolina");
-      states.Add("ND", "North Dakota");
-      states.Add("OH", "Ohio");
-      states.Add("OK", "Oklahoma");
-      states.Add("OR", "Oregon");
-      states.Add("PA", "Pennsylvania");
-      states.Add("RI", "Rhode Island");
-      states.Add("SC", "South Carolina");
-      states.Add("SD", "South Dakota");
-      states.Add("TN", "Tennessee");
-      states.Add("TX", "Texas");
-      states.Add("UT", "Utah");
-      states.Add("VT", "Vermont");
-      states.Add("VA", "Virginia");
-      states.Add("WA", "Washington");
-      states.Add("WV", "West Virginia");
-      states.Add("WI", "Wisconsin");
-      states.Add("WY", "Wyoming");
-
-      return states;
     }
   }
 }
