@@ -16,20 +16,22 @@ namespace WeatherApp
   {
     public Form1()
     {
-      // 
       InitializeComponent();
       cmbStates.Items.AddRange(states);
     }
 
+    // list of states for the combo box
     string[] states = {"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado","Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii","Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine","Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri","Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York","North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania","Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah","Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
 
     private void btbGetWeather_Click(object sender, EventArgs e)
     {
+      // disable the button to stop user from doing things while the API call is happening.
       btbGetWeather.Enabled = false;
 
       string city = txtCity.Text;
       string state = cmbStates.Text;
 
+      // Data validation, and setting the text / image if everythings fine.
       if (LocationDataValid(city, state, out string error))
       {
         if (VerifyLength(city, 3))
@@ -92,6 +94,7 @@ namespace WeatherApp
       {
         using (WebClient client = new WebClient())
         {
+          // connects to the weather server and sends a get request to get the weather image.
           string baseUrl = "http://weather-csharp.herokuapp.com/";
           string weatherPhotoUrl = String.Format("{0}photo?city={1}&state={2}", baseUrl, city, state);
           string tempFileDirectory = System.IO.Path.GetTempPath().ToString();
@@ -111,6 +114,7 @@ namespace WeatherApp
 
     private bool GetWeatherText(string city, string state, out string weatherText, out string errorMessage)
     {
+      // connects to the weather server and sends a get request fo the weather data.
       string baseUrl = "http://weather-csharp.herokuapp.com/";
       string weatherTextUrl = String.Format("{0}text?city={1}&state={2}", baseUrl, city, state);
       weatherText = null;
@@ -134,6 +138,7 @@ namespace WeatherApp
     }
     private bool LocationDataValid(string city, string state, out string errorMessage)
     {
+      //makes sure both city and state have values.
       errorMessage = null;
       if (String.IsNullOrWhiteSpace(city))
       {
@@ -148,7 +153,8 @@ namespace WeatherApp
       return true;
     }
     private bool CheckForNumericCharacters(string testString)
-    {
+    { 
+      // makes sure only letters are being used.
       foreach (char c in testString)
       {
         if (Char.IsNumber(c))
